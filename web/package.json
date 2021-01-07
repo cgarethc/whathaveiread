@@ -12,10 +12,12 @@
     "@material-ui/core": "latest",
     "clsx": "latest",
     "firebase": "^8.2.1",
+    "lodash": "^4.17.20",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "latest"
+    "react-scripts": "latest",
+    "recharts": "^1.8.5"
   },
   "browserslist": {
     "production": [
@@ -28,5 +30,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "babel-plugin-lodash": "^3.3.4"
   }
 }

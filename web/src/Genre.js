@@ -2,30 +2,47 @@ import React from 'react';
 import {
   useParams
 } from "react-router-dom";
+import _ from 'lodash';
 
-import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+
+import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
 export default function Genre(props) {
   let { userId } = useParams();
 
   const [loading, setLoading] = React.useState(false);
-  const [stats, setStats] = React.useState();
+  const [genreStats, setGenreStats] = React.useState([]);
 
   React.useEffect(async () => {
-    if (!stats && !loading) {
+    if (genreStats.length == 0 && !loading) {
       setLoading(true);
+      
       const ref = props.db.collection('userstats').doc(userId);
       const doc = await ref.get();
-      setStats(doc);
-      console.log('stats is', doc.data());
+      const data = doc.data();
+      
+      const genreChartData = [];
+      _.forOwn(data.genre, function (genreBooks, genreName) {        
+        genreChartData.push({ name: genreName, value: genreBooks.count });
+      });
+
+      setGenreStats(_(genreChartData).sortBy('value').reverse().slice(0,12).value());
+
       setLoading(false);
 
     }
   });
 
   return (
-    <Typography>
-      ---
-    </Typography>
+    <Box>
+      <BarChart width={1000} height={250} data={genreStats}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Bar dataKey="value" fill="#8884d8" />
+      </BarChart>
+    </Box>
   );
 }
