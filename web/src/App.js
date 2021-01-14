@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   BrowserRouter as Router,
-  Route
+  Route, Switch
 } from "react-router-dom";
 
 import Container from '@material-ui/core/Container';
@@ -41,22 +41,29 @@ function Copyright() {
   );
 }
 
-export default function App() {  
+export default function App() {
 
   return (
     <Router>
-      <Route path={`/user/:userId`}>
-        <Container maxWidth="md">
-          <Box my={4}>
-            <Typography variant="h4" component="h1" gutterBottom>
-              What have I read?
+      <Switch>
+        <Route path={`/user/:userId`}>
+          <Container maxWidth="md">
+            <Box my={4}>
+              <Typography variant="h4" component="h1" gutterBottom>
+                What have I read?
             </Typography>
-            <Preamble/>
-            <Genre db={db}/>
-            <Copyright />
-          </Box>
-        </Container>
-      </Route>
+              <Preamble />
+              <Typography variant="h5" component="h1" gutterBottom>Genre/shelf</Typography>
+              <Genre db={db} />
+              <Copyright />
+            </Box>
+          </Container>
+        </Route>
+        <Route path='/'>
+          <Typography>😱 I don't know who you are 😱</Typography>
+          <Typography>The URL needs to have /user/[Goodreads ID] e.g. Gareth is <a href="/user/4622353">/user/4622353</a></Typography>
+        </Route>
+      </Switch>
     </Router>
   );
 }
