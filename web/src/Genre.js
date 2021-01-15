@@ -26,7 +26,7 @@ export default function Genre(props) {
     if (genreStats.length == 0 && !loading) {
       setLoading(true);
 
-      const ref = props.db.collection('userstats').doc(userId);
+      const ref = props.db.collection('userstats').doc(`${userId}-stats`);
       const doc = await ref.get();
       const data = doc.data();
 

@@ -30,7 +30,7 @@ export default function GenreOverTime(props) {
 
       setLoading(true);
 
-      const ref = props.db.collection('userstats').doc(userId);
+      const ref = props.db.collection('userstats').doc(`${userId}-stats`);
       const doc = await ref.get();
       const data = doc.data();
 
