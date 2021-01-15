@@ -14,6 +14,7 @@ import "firebase/firestore";
 
 import Preamble from './Preamble';
 import Genre from './Genre';
+import GenreOverTime from './GenreOverTime';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAIOcRc5qxnGuz6RVH8fj8-0KYFXVkKzds",
@@ -55,13 +56,16 @@ export default function App() {
               <Preamble />
               <Typography variant="h5" component="h1" gutterBottom>Genre/shelf</Typography>
               <Genre db={db} />
+              <GenreOverTime db={db} />
               <Copyright />
             </Box>
           </Container>
         </Route>
         <Route path='/'>
-          <Typography>😱 I don't know who you are 😱</Typography>
-          <Typography>The URL needs to have /user/[Goodreads ID] e.g. Gareth is <a href="/user/4622353">/user/4622353</a></Typography>
+          <Container maxWidth="md">
+            <Typography variant="h3">😱 I don't know who you are 😱</Typography>
+            <Typography>The URL needs to have /user/[Goodreads ID] e.g. Gareth is <a href="/user/4622353">/user/4622353</a></Typography>
+          </Container>
         </Route>
       </Switch>
     </Router>

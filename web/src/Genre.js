@@ -7,7 +7,7 @@ import _, { isInteger } from 'lodash';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
-import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
 
 function selectColor(number) {
   const hue = number * 137.508; // use golden angle approximation
