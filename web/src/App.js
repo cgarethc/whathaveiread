@@ -15,6 +15,7 @@ import "firebase/firestore";
 import Preamble from './Preamble';
 import Genre from './Genre';
 import GenreOverTime from './GenreOverTime';
+import Category from './Category';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAIOcRc5qxnGuz6RVH8fj8-0KYFXVkKzds",
@@ -54,7 +55,9 @@ export default function App() {
                 What have I read?
             </Typography>
               <Preamble />
-              <Typography variant="h5" component="h1" gutterBottom>Genre/shelf</Typography>
+              <Typography variant="h5" component="h1" gutterBottom>Total books</Typography>
+              <Category db={db} />
+              <Typography variant="h5" component="h1" gutterBottom>Genre/shelf</Typography>              
               <Genre db={db} />
               <GenreOverTime db={db} />
               <Copyright />

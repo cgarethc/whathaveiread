@@ -7,8 +7,10 @@ import _, { isInteger } from 'lodash';
 import Box from '@material-ui/core/Box';
 
 import {
-  AreaChart, Area, XAxis, YAxis, Tooltip, Label} from 'recharts';
+  AreaChart, Area, XAxis, YAxis, Tooltip, Label
+} from 'recharts';
 
+import {isValidGenre} from './DataUtilities';
 
 function selectColor(number) {
   const hue = number * 137.508; // use golden angle approximation
@@ -34,8 +36,6 @@ export default function GenreOverTime(props) {
       const doc = await ref.get();
       const data = doc.data();
 
-      console.log(JSON.stringify(data));
-
       setTotal(Object.keys(data.genre).length);
 
       const genreChartData = [];
@@ -43,46 +43,45 @@ export default function GenreOverTime(props) {
       const genres = new Set();
 
       _.forOwn(data.genre, function (genreBooks, genreName) {
-        const genreSummary = { genreName, count: 0 };
-        genres.add(genreSummary);
-        _.forOwn(genreBooks.byReadYear, function (yearStats, year) {
-          if (year !== 'undefined') {
-            // see if we already have a data item for that year
-            let dataItemForYear = _.find(genreChartData, { year });
-            if (!dataItemForYear) {
-              dataItemForYear = { year };
-              genreChartData.push(dataItemForYear);
-            }
+        if (isValidGenre(genreName)) {
+          const genreSummary = { genreName, count: 0 };
+          genres.add(genreSummary);
+          _.forOwn(genreBooks.byReadYear, function (yearStats, year) {
+            if (year !== 'undefined') {
+              // see if we already have a data item for that year
+              let dataItemForYear = _.find(genreChartData, { year });
+              if (!dataItemForYear) {
+                dataItemForYear = { year };
+                genreChartData.push(dataItemForYear);
+              }
 
-            if (!dataItemForYear[genreName]) {
-              dataItemForYear[genreName] = 0;
+              if (!dataItemForYear[genreName]) {
+                dataItemForYear[genreName] = 0;
+              }
+              dataItemForYear[genreName] += yearStats.count;
+              genreSummary.count += yearStats.count;
             }
-            dataItemForYear[genreName] += yearStats.count;
-            genreSummary.count += yearStats.count;
-          }
-        });
-
+          });
+        }
       });
 
       setGenres(genres);
 
       setGenreStats(_.sortBy(genreChartData, 'year'));
-      console.log(genreChartData);
-
 
       setLoading(false);
 
     }
   });
 
-  const genresToShow = _(Array.from(genres)).sortBy('count').reverse().slice(0, 10).value();  
+  const genresToShow = _(Array.from(genres)).sortBy('count').reverse().slice(0, 10).value();
   const areas = genresToShow.map(
     (genreSummary, index) => {
       const { genreName, count } = genreSummary;
       return (
-      <Area key={genreName} type="monotone" dataKey={genreName} 
-      stackId="1" stroke='#000000' fill={selectColor(index)}>        
-      </Area>);
+        <Area key={genreName} type="monotone" dataKey={genreName}
+          stackId="1" stroke='#000000' fill={selectColor(index)}>
+        </Area>);
     }
   );
 
