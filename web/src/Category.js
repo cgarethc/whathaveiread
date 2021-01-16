@@ -59,9 +59,9 @@ export default function Category(props) {
           <XAxis dataKey="year" />
           <YAxis />
           <Tooltip />
-          <Bar key='fiction' dataKey='fiction' fill={selectColor(1)} stackId="a" />
-          <Bar key='nonfiction' dataKey='nonfiction' fill={selectColor(2)} stackId="a" />
-          <Bar key='unknown' dataKey='unknown' fill={selectColor(3)} stackId="a" >
+          <Bar key='fiction' dataKey='fiction' fill={selectColor(1)} stackId="a" name='Fiction'/>
+          <Bar key='nonfiction' dataKey='nonfiction' fill={selectColor(2)} stackId="a" name='Nonfiction' />
+          <Bar key='unknown' dataKey='unknown' fill={selectColor(3)} stackId="a" name='Unknown'>
             <LabelList dataKey="total" position="top" />
           </Bar>
         </BarChart>)

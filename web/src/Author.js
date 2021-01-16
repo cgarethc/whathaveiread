@@ -2,14 +2,11 @@ import React from 'react';
 import {
   useParams
 } from "react-router-dom";
-import _, { isInteger } from 'lodash';
 
 import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
-
-import { isValidGenre } from './DataUtilities';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, LabelList } from 'recharts';
 
 function selectColor(number) {
   const hue = number * 137.508; // use golden angle approximation
@@ -21,7 +18,6 @@ export default function Genre(props) {
 
   const [loading, setLoading] = React.useState(false);
   const [genreStats, setGenreStats] = React.useState([]);
-  const [total, setTotal] = React.useState(0);
   const [years, setYears] = React.useState([]);
 
   React.useEffect(async () => {
@@ -32,46 +28,58 @@ export default function Genre(props) {
       const doc = await ref.get();
       const data = doc.data();
 
-      setTotal(Object.keys(data.genre).length);
-
-      const genreChartData = [];
+      const chartData = [];
 
       const years = new Set();
-      _.forOwn(data.genre, function (genreBooks, genreName) {
-        if (isValidGenre(genreName)) {
-          const dataItem = { name: genreName };
-          let counter = 0;
-          _.forOwn(genreBooks.byReadYear, function (yearBooks, year) {
-            dataItem[year] = yearBooks.count;
-            if (year !== 'undefined') {
-              years.add(year);
-              counter += yearBooks.count;
-            }
-          });
-          dataItem.total = counter;
-          genreChartData.push(dataItem);
-        }
+      _.forOwn(data.summary.author, function (authorYears, author) {
+
+        const dataItem = { author, total: authorYears.total };
+
+        _.forOwn(authorYears, function (yearCount, year) {
+
+          let yearKey = year;
+          if (year === 'undefined') {
+            yearKey = 'Not recorded';
+          }
+
+          if (yearKey !== 'total') {
+            years.add(yearKey);
+            dataItem[yearKey] = yearCount;
+          }
+        });
+
+        chartData.push(dataItem);
       });
 
       setYears(years);
 
-      setGenreStats(_(genreChartData).sortBy('total').reverse().slice(0, 20).value());
+      setGenreStats(_(chartData).sortBy('total').reverse().slice(0, 20).value());
 
       setLoading(false);
 
     }
   });
 
+  const yearsAsArray = Array.from(years).sort();
+  const maxYear = yearsAsArray[yearsAsArray.length - 1];
+
   const bars = Array.from(years).sort().map(
-    year => <Bar key={year} dataKey={year} fill={selectColor(year)} stackId="a" />
+    year => {
+      return (<Bar key={year} dataKey={year} fill={selectColor(year)} stackId="a" >
+        {year === maxYear && (
+          <LabelList dataKey="total" position="top" />
+        )}
+      </Bar>);
+    }
   );
 
   return (
+
     <Box>
       {loading && <CircularProgress />}
       {!loading && (
         <BarChart width={1000} height={250} data={genreStats}>
-          <XAxis dataKey="name" />
+          <XAxis dataKey="author" />
           <YAxis />
           <Tooltip />
           {bars}

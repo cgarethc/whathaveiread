@@ -2,15 +2,15 @@ import React from 'react';
 import {
   useParams
 } from "react-router-dom";
-import _, { isInteger } from 'lodash';
 
 import Box from '@material-ui/core/Box';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import {
-  AreaChart, Area, XAxis, YAxis, Tooltip, Label
+  AreaChart, Area, XAxis, YAxis, Tooltip, Legend
 } from 'recharts';
 
-import {isValidGenre} from './DataUtilities';
+import { isValidGenre } from './DataUtilities';
 
 function selectColor(number) {
   const hue = number * 137.508; // use golden angle approximation
@@ -80,26 +80,30 @@ export default function GenreOverTime(props) {
       const { genreName, count } = genreSummary;
       return (
         <Area key={genreName} type="monotone" dataKey={genreName}
-          stackId="1" stroke='#000000' fill={selectColor(index)}>
+          stackId="1" stroke={selectColor(index)} fill={selectColor(index)}>
         </Area>);
     }
   );
 
   return (
     <Box>
-      <AreaChart
-        width={800}
-        height={400}
-        data={genreStats}
-        margin={{
-          top: 10, right: 30, left: 0, bottom: 0,
-        }}
-      >
-        <XAxis dataKey="year" />
-        <YAxis />
-        <Tooltip />
-        {areas}
-      </AreaChart>
+      {loading && <CircularProgress />}
+      {!loading && (
+        <AreaChart
+          width={1000}
+          height={400}
+          data={genreStats}
+          margin={{
+            top: 10, right: 30, left: 0, bottom: 0,
+          }}
+        >
+          <XAxis dataKey="year" />
+          <YAxis />
+          <Tooltip />
+          {areas}
+          <Legend verticalAlign="bottom" height={36} />
+        </AreaChart>
+      )}
     </Box>
   );
 }
