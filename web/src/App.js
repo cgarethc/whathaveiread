@@ -18,6 +18,7 @@ import GenreOverTime from './GenreOverTime';
 import Category from './Category';
 import Author from './Author';
 import Books from './Books';
+import Setting from './Setting';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAIOcRc5qxnGuz6RVH8fj8-0KYFXVkKzds",
@@ -64,6 +65,8 @@ export default function App() {
               <Typography variant="h5" component="h1" gutterBottom>Genre/shelf</Typography>              
               <Genre db={db} />
               <GenreOverTime db={db} />
+              <Typography variant="h5" component="h1" gutterBottom>Setting</Typography>
+              <Setting db={db} />
               <Typography variant="h5" component="h1" gutterBottom>Books</Typography>
               <Books db={db} />
               

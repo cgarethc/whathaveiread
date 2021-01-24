@@ -13,11 +13,12 @@ function selectColor(number) {
   return `hsl(${hue},50%,75%)`;
 }
 
-export default function Category(props) {
+export default function Setting(props) {
   let { userId } = useParams();
 
   const [loading, setLoading] = React.useState(false);
   const [stats, setStats] = React.useState([]);
+  const [years, setYears] = React.useState([]);
 
   React.useEffect(async () => {
     if (stats.length == 0 && !loading) {
@@ -29,42 +30,60 @@ export default function Category(props) {
 
       const chartData = [];
 
-      _.forOwn(data.summary.category, function (yearCategories, year) {
-        const dataItem = {
-          year,
-          fiction: yearCategories.Fiction ? yearCategories.Fiction : 0,
-          nonfiction: yearCategories.Nonfiction ? yearCategories.Nonfiction : 0,
-          unknown: yearCategories.Unknown ? yearCategories.Unknown : 0,
-        };
+      const years = new Set();
+      _.forOwn(data.setting, function (settingBooks, setting) {
 
-        dataItem.total = dataItem.fiction + dataItem.nonfiction + dataItem.unknown
+        const dataItem = { setting, total: settingBooks.count };
+
+        _.forOwn(settingBooks.byReadYear, function (yearData, year) {
+
+          let yearKey = year;
+          if (year === 'undefined') {
+            yearKey = 'Unknown';
+          }
+
+          years.add(yearKey);
+          dataItem[yearKey] = yearData.count;
+
+        });
+
         chartData.push(dataItem);
       });
 
+      setYears(years);
 
-
-      setStats(_(chartData).sortBy('year').value());
+      setStats(_(chartData).sortBy('total').reverse().slice(0, 20).value());
 
       setLoading(false);
 
     }
   });
 
+  const yearsAsArray = Array.from(years).sort();
+  const maxYear = yearsAsArray[yearsAsArray.length - 1];
+
+  const bars = Array.from(years).sort().map(
+    year => {
+      return (<Bar key={year} dataKey={year} fill={selectColor(year)} stackId="a" >
+        {year === maxYear && (
+          <LabelList dataKey="total" position="top" />
+        )}
+      </Bar>);
+    }
+  );
+
   return (
+
     <Box>
       {loading && <CircularProgress />}
       {!loading && (
         <BarChart width={1000} height={250} data={stats}>
-          <XAxis dataKey="year" />
+          <XAxis dataKey="setting" />
           <YAxis />
           <Tooltip />
-          <Bar key='fiction' dataKey='fiction' fill={selectColor(1)} stackId="a" name='Fiction'/>
-          <Bar key='nonfiction' dataKey='nonfiction' fill={selectColor(2)} stackId="a" name='Nonfiction' />
-          <Bar key='unknown' dataKey='unknown' fill={selectColor(3)} stackId="a" name='Unknown'>
-            <LabelList dataKey="total" position="top" />
-          </Bar>
-        </BarChart>)
-      }
+          {bars}
+        </BarChart>
+      )}
     </Box>
   );
 }

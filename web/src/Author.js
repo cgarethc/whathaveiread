@@ -39,7 +39,7 @@ export default function Genre(props) {
 
           let yearKey = year;
           if (year === 'undefined') {
-            yearKey = 'Not recorded';
+            yearKey = 'Unknown';
           }
 
           if (yearKey !== 'total') {
