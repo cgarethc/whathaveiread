@@ -24,14 +24,14 @@ export default function Setting(props) {
     if (stats.length == 0 && !loading) {
       setLoading(true);
 
-      const ref = props.db.collection('userstats').doc(`${userId}-stats`);
+      const ref = props.db.collection('userstats').doc(`${userId}-setting`);
       const doc = await ref.get();
       const data = doc.data();
 
       const chartData = [];
 
       const years = new Set();
-      _.forOwn(data.setting, function (settingBooks, setting) {
+      _.forOwn(data, function (settingBooks, setting) {
 
         const dataItem = { setting, total: settingBooks.count };
 

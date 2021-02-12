@@ -28,16 +28,16 @@ export default function Genre(props) {
     if (genreStats.length == 0 && !loading) {
       setLoading(true);
 
-      const ref = props.db.collection('userstats').doc(`${userId}-stats`);
+      const ref = props.db.collection('userstats').doc(`${userId}-genre`);
       const doc = await ref.get();
       const data = doc.data();
 
-      setTotal(Object.keys(data.genre).length);
+      setTotal(Object.keys(data).length);
 
       const genreChartData = [];
 
       const years = new Set();
-      _.forOwn(data.genre, function (genreBooks, genreName) {
+      _.forOwn(data, function (genreBooks, genreName) {
         if (isValidGenre(genreName)) {
           const dataItem = { name: genreName };
           let counter = 0;

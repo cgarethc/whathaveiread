@@ -24,14 +24,14 @@ export default function Genre(props) {
     if (genreStats.length == 0 && !loading) {
       setLoading(true);
 
-      const ref = props.db.collection('userstats').doc(`${userId}-stats`);
+      const ref = props.db.collection('userstats').doc(`${userId}-author`);
       const doc = await ref.get();
       const data = doc.data();
 
       const chartData = [];
 
       const years = new Set();
-      _.forOwn(data.summary.author, function (authorYears, author) {
+      _.forOwn(data, function (authorYears, author) {
 
         const dataItem = { author, total: authorYears.total };
 
