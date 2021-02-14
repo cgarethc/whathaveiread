@@ -45,6 +45,7 @@ export default function Books(props) {
       const ref = props.db.collection('userstats').doc(`${userId}-books`);
       const doc = await ref.get();
       const data = doc.data();
+      // console.log('BOOKS', JSON.stringify(data));
 
       setBooks(data.books);
 

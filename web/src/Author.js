@@ -27,6 +27,7 @@ export default function Genre(props) {
       const ref = props.db.collection('userstats').doc(`${userId}-author`);
       const doc = await ref.get();
       const data = doc.data();
+      // console.log('AUTHOR', JSON.stringify(data));
 
       const chartData = [];
 
