@@ -2,7 +2,6 @@ import React from 'react';
 import {
   useParams
 } from "react-router-dom";
-import _, { isInteger } from 'lodash';
 
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';

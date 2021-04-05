@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Profiler } from 'react';
 import {
   BrowserRouter as Router,
   Route, Switch
@@ -19,6 +19,8 @@ import Category from './Category';
 import Author from './Author';
 import Books from './Books';
 import Setting from './Setting';
+import UserList from './UserList';
+import Profile from './Profile';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAIOcRc5qxnGuz6RVH8fj8-0KYFXVkKzds",
@@ -34,6 +36,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
+
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -46,7 +50,7 @@ function Copyright() {
   );
 }
 
-export default function App() {
+export default function App() {  
 
   return (
     <Router>
@@ -54,6 +58,7 @@ export default function App() {
         <Route path={`/user/:userId`}>
           <Container maxWidth="md">
             <Box my={4}>
+              <Profile db={db}/>
               <Typography variant="h4" component="h1" gutterBottom>
                 What have I read?
             </Typography>
@@ -62,14 +67,14 @@ export default function App() {
               <Category db={db} />
               <Typography variant="h5" component="h1" gutterBottom>Authors</Typography>
               <Author db={db} />
-              <Typography variant="h5" component="h1" gutterBottom>Genre/shelf</Typography>              
+              <Typography variant="h5" component="h1" gutterBottom>Genre/shelf</Typography>
               <Genre db={db} />
               <GenreOverTime db={db} />
               <Typography variant="h5" component="h1" gutterBottom>Setting</Typography>
               <Setting db={db} />
               <Typography variant="h5" component="h1" gutterBottom>Books</Typography>
               <Books db={db} />
-              
+
               <Copyright />
             </Box>
           </Container>
@@ -78,6 +83,8 @@ export default function App() {
           <Container maxWidth="md">
             <Typography variant="h3">😱 I don't know who you are 😱</Typography>
             <Typography>The URL needs to have /user/[Goodreads ID] e.g. Gareth is <a href="/user/4622353">/user/4622353</a></Typography>
+
+            <UserList db={db} />
           </Container>
         </Route>
       </Switch>
